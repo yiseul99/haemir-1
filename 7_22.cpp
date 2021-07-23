@@ -20,10 +20,13 @@ float scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
     printf("[YDLIDAR INFO]: I heard a laser scan %s[%d]:\n", scan->header.frame_id.c_str(), count);
     printf("[YDLIDAR INFO]: angle_range : [%f, %f]\n", RAD2DEG(scan->angle_min), RAD2DEG(scan->angle_max));
     
+	distances.clear();
+
+
     for(int i = 0; i < count; i++) 
 	{
       float degree = RAD2DEG(scan->angle_min + scan->angle_increment * i);
-   
+       
    
           //printf("[LDS INFO]: angle-distance : [%f, %f, %i]\n", degree, scan->ranges[i], i);
       if (scan->ranges[i] > 1 ) 
@@ -63,7 +66,7 @@ std::vector <std::vector <float> > make_second_array(const std::vector<float> di
 	array.clear();
 	tmp.clear();
 	for (int i = 1; i < g_count ; i++)
-   {
+	{
       if (distances[i - 1] == 1 && distances[i] == 1)
       {
         cnt++;
@@ -79,7 +82,16 @@ std::vector <std::vector <float> > make_second_array(const std::vector<float> di
       }
 	}
 	tmp = array;
+	for (int j = 0; j < g_num ; j++)
+	{
+		for (int i = 0; i < array[j].size() ; i++)
+		{
+		//dozzy	std::cout << "array[j][i] = " << array[j][i] << std::endl;
+		}
+	}
+   // dozzy	std::cout << "clear is done\n" << std::endl;
 	array.clear();
+	
 	return tmp;
 }
 
@@ -105,22 +117,24 @@ float select_angle(std::vector< std::vector<float> > array)
    return (num - max / 2);
 }
 
+
 float find_optimal_degree(const std::vector<float> distances)
 {
 
    float optimal;
 
    optimal = select_angle(make_second_array(distances));
+   optimal = optimal / g_count * 360;
    tmp.clear();
    printf("optimal: %f\n",  optimal);
    return (optimal);
 }
+
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "ydlidar_client");
     ros::NodeHandle n;
     ros::Subscriber sub = n.subscribe<sensor_msgs::LaserScan>("/scan", 1000, scanCallback);
     ros::spin();
-
     return 0;
 }
