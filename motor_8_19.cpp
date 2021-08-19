@@ -130,7 +130,7 @@ void loop()
   delay(10);
   Serial.println(heading * 180/M_PI);
 
-//  h_angle = heading; //yiseul
+ 
 //  angle.data = h_angle; //yiseul
 //  nh.advertise(heading_angle); //yiseul
   nh.spinOnce(); //yiseul
@@ -141,7 +141,7 @@ void loop()
   float degree;
   
   heading = heading * 180/M_PI;
-   
+  h_angle = heading; //yiseul
 
 if (0<= h_angle <= 90) and (0<= way_degree <= 90) :
     
