@@ -40,7 +40,7 @@ def location():
 	way_longitude = 350 #float(input("way_longitude: "))
 	way_x, way_y = calcpoint.grid(way_latitude*100.0, way_longitude*100.0)
 	
-	while 1: 
+	while True: 
 		data = ser.readline()
 		result = collections.defaultdict()
 		res = GPSparser(data)
@@ -55,10 +55,8 @@ def location():
 			if (res == "checksum error"):
 				print("")
 			#print(result)
-			 x, y = calcpoint.grid(result['latitude']*100.0,result['longitude']*100.0)
-
+			x, y = calcpoint.grid(result['latitude']*100.0,result['longitude']*100.0)
 			print("x =%f y =%f" %(x,y))
-
 			angle = (way_y-y)/(way_x-x)
 			way_angle = math.atan(angle)
 			way_degree = way_angle*180/math.pi
@@ -73,8 +71,8 @@ def location():
 		except:
 			print("not found data")
 
-			if KeyboardInterrupt :
-				break
+		if KeyboardInterrupt :
+			break
 			
 		
 
