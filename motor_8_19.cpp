@@ -37,7 +37,7 @@ byte motor_right = 10;
 String str;
 float way_degree;
 float rotate_angle;
-float c = 1;
+float c = 0.5;
 void messageCb(const std_msgs::Float64& msg)
 {
  // Serial.println("msg.data");
@@ -78,7 +78,7 @@ void setup()
 
   nh.subscribe(sub);
   delay(7000); // delay to allow the ESC to recognize the stopped signal
-}
+
 
 float vel_plus(float rotate_angle)
 {
@@ -94,16 +94,6 @@ float vel_minus(float rotate_angle)
     return (velocity);
 }
 
-float cmd_l(float rotate_angle)
-{
-    left.writeMicroseconds(vel_minus(rotate_angle));
-    right.writeMicroseconds(vel_plus(rotate_angle)); 
-}
-
-float cmd_r(float rotate_angle)
-{
-    left.writeMicroseconds(vel_plus(rotate_angle));
-    right.writeMicroseconds(vel_minus(rotate_angle)); 
 }
 
 
@@ -143,31 +133,56 @@ void loop()
   heading = heading * 180/M_PI;
   h_angle = heading; //yiseul
 
-if (0<= h_angle <= 90) and (0<= way_degree <= 90) :
+if (0<= h_angle <= 90) and (0<= way_degree <= 90) {
     
-    if (h_angle <= way_degree) :
-        cmd_r(h_angle - way_degree) 
-    else :
-        cmd_l(way_degree - h_angle) 
+    if (h_angle <= way_degree) {
+
+        float rotate_angle = h_angle - way_degree ; 
+
+        left.writeMicroseconds(vel_plus(rotate_angle));
+        right.writeMicroseconds(vel_minus(rotate_angle));}
+
+    else {
+
+        float rotate_angle = way_degree - h_angle;
+
+        left.writeMicroseconds(vel_minus(rotate_angle));
+        right.writeMicroseconds(vel_plus(rotate_angle)); }}
 
 
-elif (0<= h_angle <= 90) and (270<= way_degree <= 360):
+else if (0<= h_angle <= 90) and (270<= way_degree <= 360) {
+
+        float rotate_angle = 360 + (h_angle + way_degree);
+
+        left.writeMicroseconds(vel_plus(rotate_angle));
+        right.writeMicroseconds(vel_minus(rotate_angle)); }
+
+
+else if (270<= h_angle <= 360) and (0<= way_degree <= 90) {
     
-        cmd_r(360 + (h_angle - way_degree)) 
+        float rotate_angle = 360 - (h_angle - way_degree);
 
-
-elif (270<= h_angle <= 360) and (0<= way_degree <= 90):
-
-        cmd_l(360-(h_angle - way_degree)) 
+        left.writeMicroseconds(vel_minus(rotate_angle));
+        right.writeMicroseconds(vel_plus(rotate_angle)); }
 
     
-elif (270<= h_angle <= 360) and (270<= way_degree <= 360):
+else if (270<= h_angle <= 360) and (270<= way_degree <= 360) {
     
-    if (h_angle <= way_degree) :
-        cmd_l(way_degree - h_angle) 
-    else :
-        cmd_r(h_angle - way_degree) 
+    if (h_angle <= way_degree) {
 
+        float rotate_angle = way_degree - h_angle ;
+
+        left.writeMicroseconds(vel_minus(rotate_angle));
+        right.writeMicroseconds(vel_plus(rotate_angle)); }
+
+
+    else {
+
+        float rotate_angle = h_angle;
+
+        left.writeMicroseconds(vel_plus(rotate_angle));
+        right.writeMicroseconds(vel_minus(rotate_angle)); }
+}
   
    delay(1000);
 }
