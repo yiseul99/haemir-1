@@ -44,6 +44,20 @@ void messageCb(const std_msgs::Float64& msg)
   way_degree = msg.data;
 }
 
+float vel_plus(float rotate_angle)
+{
+    float velocity;
+    velocity = 1600 + c * rotate_angle;
+    return (velocity);
+}
+
+float vel_minus(float rotate_angle)
+{
+    float velocity;
+    velocity = 1600 - c * rotate_angle;
+    return (velocity);
+}
+
 ros::Subscriber <std_msgs::Float64> sub("gps_xy", messageCb);
 
 
@@ -79,20 +93,6 @@ void setup()
   nh.subscribe(sub);
   delay(7000); // delay to allow the ESC to recognize the stopped signal
 
-
-float vel_plus(float rotate_angle)
-{
-    float velocity;
-    velocity = 1600 + c * rotate_angle;
-    return (velocity);
-}
-
-float vel_minus(float rotate_angle)
-{
-    float velocity;
-    velocity = 1600 - c * rotate_angle;
-    return (velocity);
-}
 
 }
 
@@ -133,7 +133,7 @@ void loop()
   heading = heading * 180/M_PI;
   h_angle = heading; //yiseul
 
-if (0<= h_angle <= 90) and (0<= way_degree <= 90) {
+if (0<= h_angle && h_angle <= 90 && 0<= way_degree && way_degree <= 90) {
     
     if (h_angle <= way_degree) {
 
@@ -150,7 +150,7 @@ if (0<= h_angle <= 90) and (0<= way_degree <= 90) {
         right.writeMicroseconds(vel_plus(rotate_angle)); }}
 
 
-else if (0<= h_angle <= 90) and (270<= way_degree <= 360) {
+else if (0<= h_angle && h_angle <= 90 && 270<= way_degree && way_degree <= 360) {
 
         float rotate_angle = 360 + (h_angle + way_degree);
 
@@ -158,7 +158,7 @@ else if (0<= h_angle <= 90) and (270<= way_degree <= 360) {
         right.writeMicroseconds(vel_minus(rotate_angle)); }
 
 
-else if (270<= h_angle <= 360) and (0<= way_degree <= 90) {
+else if (270<= h_angle && h_angle <= 360 && 0 <= way_degree && way_degree <= 90) {
     
         float rotate_angle = 360 - (h_angle - way_degree);
 
@@ -166,7 +166,7 @@ else if (270<= h_angle <= 360) and (0<= way_degree <= 90) {
         right.writeMicroseconds(vel_plus(rotate_angle)); }
 
     
-else if (270<= h_angle <= 360) and (270<= way_degree <= 360) {
+else if (270<= h_angle && h_angle <= 360 && 270<= way_degree && way_degree <= 360) {
     
     if (h_angle <= way_degree) {
 
