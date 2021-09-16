@@ -112,22 +112,28 @@ class ControlMode2:
 
         # 목적지 설정
         # 목적지 향해서 주행
+
+
     def move_to_destination(self, destination):
         del_lati, del_longi =
-        
+        tolerance = math.sqrt(math.pow(del_lati,2) + math.pow(del_longi,2))
+    while True:    
         if (del_lati < 0) :
-            if (math.sqrt(math.pow(del_lati,2) + math.pow(del_longi,2)) < 1):
-                self.motor.motor(40,40)
-            
+            if ( tolerance =< 1):
+                self.motor.motor_move(40,40)
+                waypoint = waypoints[self.i + 1]
+                self.i = self.i + 1
             else :
-                if (del_lati > 1):
-                    self.motor.motor(30,50)
-                else (del_lati <= 1):
-                    self.motor.motor(50,30)
+                if (del_longi > 1):
+                    self.motor.motor_move(30,50)
+                else (del_longi <= 1):
+                    self.motor.motor_move(50,30)
         
         else
-            self.motor.motor(후진,후진)
+            self.motor.motor_move(0,0)
         pass
+        
+    
 
     # 종료
     def __del__(self):
