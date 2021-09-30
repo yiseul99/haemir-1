@@ -1,13 +1,8 @@
 from motor import *
-192.168.1.10
-rom socket import *
-#from graphic import *
-#from lidar import *
-#from camera import *
-from imu import *
+from socket import *
 import calculate as cal
 import math
-from gps import *
+import rospy
 
 
 def cmd_l(optimal):
